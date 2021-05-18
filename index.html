@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <style>
+            input, button { padding: 10px; }
+        </style>
+    </head>
+    <body>
+        <input type="text" id="message" />
+        <button onclick="transmitMessage()">Send</button>
+        <script>
+            // Create a new WebSocket.
+            var socket  = new WebSocket('ws://localhost:9090');
+
+            socket.onopen = function() {
+              console.log("Started!");
+            }
+            // Define the 
+            var message = document.getElementById('message');
+
+            let authed = false;
+
+            function transmitMessage() {
+              let data = null, message = null;
+              
+              if(!authed) {
+                data = {
+                  "type": "authentication",
+                  "token": "ok"
+                }
+                msg = JSON.stringify(data);
+                authed = true;
+              } else {
+                msg = "aha";
+              }
+              
+              console.log(msg);
+              socket.send(msg)
+              //const data = "ok";
+              //socket.send(data);
+            }
+
+            socket.onmessage = function(e) {
+              console.log("GOT: " + e.data);
+            }
+        </script>
+    </body>
+</html>
